@@ -1,6 +1,18 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <thread>
+#include <chrono>
+
+
+const std::string fire = "\u{1F525}";
+const std::string firefighter = "\u{1F9D1}";
+
+// Define a struct to hold row and column indices
+struct Position {
+    int x;
+    int y;
+};
 
 class Map {
 public:
@@ -21,6 +33,32 @@ public:
     }
 
     // Method to set a specific cell in the 2D vector
+    void findFire(int row, int col, const std::string& value) {
+
+        // Move Firefighter one position closer
+
+        // update the game screen
+
+        // wait for a set amount of time
+
+    }
+
+    // Method to start a fire on the map
+    // TODO: Start on a random location, right now it just starts bottom left
+    void startFire() {
+        firePos.x = mapSize-1;
+        firePos.y = mapSize-1;
+        set(firePos.y, firePos.x, fire);
+    }
+
+    // Method to set a specific cell in the 2D vector
+    void addFirefighter(int row, int col, const std::string& value) {
+        firefighterPos.x = col;
+        firefighterPos.y = row;
+        set(firefighterPos.y, firefighterPos.x, firefighter);
+    }
+
+    // Method to set a specific cell in the 2D vector
     void set(int row, int col, const std::string& value) {
         if (row >= 0 && row < mapSize && col >= 0 && col < mapSize) {
             mapVector[row][col] = value;
@@ -32,6 +70,8 @@ public:
 
 private:
     int mapSize; // Size of the 2D vector
+    Position firePos; // Location of the fire
+    Position firefighterPos; // location of the firefighter
     std::vector< std::vector<std::string> > mapVector; // 2D vector of strings
 
     // Method to clear the console (platform-dependent)
@@ -49,8 +89,10 @@ int main() {
 
     // Get map size
     int mapSize;
-    std::cout << "Welcome to FireFighters! Choose your map size (Max 50):";
+    std::string userIn = "";
+    std::cout << "Welcome to FireFighters! Choose your map size (Min 2, Max 50):";
     std::cin >> mapSize;
+    mapSize = mapSize < 2 ? 2 : mapSize;
     mapSize = mapSize > 50 ? 50 : mapSize;
 
     Map map(mapSize, "-");
@@ -59,16 +101,21 @@ int main() {
 
     while(true){
         std::cout << "Start a fire?:";
-        std::cin >> mapSize;
+        std::cin >> userIn;
         std::cout << std::endl; // JARRED: if i switch this line with the one above my program will start looping infinitely
-
-        map.print();
         
         // add a fire to the bottom right
+        map.startFire();
 
         // add a firefighter to the top left
+        map.addFirefighter(0, 0, firefighter);
 
         // have the firefighter go to the fire
+        map.print();
+
+
+        // Move at 30FPS-ish
+        std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
 
 

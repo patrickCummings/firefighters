@@ -61,10 +61,10 @@ public:
             print();
 
             // wait for a set amount of time at 30FPS-ish
-            std::this_thread::sleep_for(std::chrono::milliseconds(30));
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
         }
-        std::cout << std::endl;
+        std::cout << std::endl << "Fire EXTINGUISHED" << std::endl;
     }
 
     // Method to start a fire on the map
@@ -103,7 +103,6 @@ public:
             std::cerr << "Index out of bounds" << std::endl;
         }
     }
-    
 
 private:
     int mapSize; // Size of the 2D vector
@@ -150,9 +149,7 @@ int main() {
 
         // have the firefighter go to the fire
         map.findFire();
-
     }
-
 
     return 0;
 }

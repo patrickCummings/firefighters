@@ -19,6 +19,15 @@ public:
     // Constructor to initialize the 2D vector with a given size and initial value
     Map(int size) : mapSize(size), mapVector(size, std::vector<std::string>(size, background)) {}
 
+    // Method to set the map back to the default background
+    void clearMap() {
+        for(int row = 0; row < mapSize; row++){
+            for(int col = 0; col < mapSize; col++){
+                mapVector[row][col] = background; 
+            }
+        }
+    }
+
     // Method to print the 2D vector
     void print() const {
         clearConsole();
@@ -125,13 +134,14 @@ int main() {
 
     Map map(mapSize);
 
-    map.print();
-
     while(true){
-        std::cout << "Start a fire?:";
+        map.clearMap();
+        map.print();
+
+        std::cout << "Start a fire? (Any Key + Enter):";
         std::cin >> userIn;
         std::cout << std::endl; // JARRED: if i switch this line with the one above my program will start looping infinitely
-        
+
         // add a fire to the bottom right
         map.startFire();
 

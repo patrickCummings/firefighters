@@ -48,7 +48,7 @@ public:
         while(firefighterPos.x != firePos.x || firefighterPos.y != firePos.y){
             Position oldPos = firefighterPos;
             // Move Firefighter one position closer, always move X first
-            if(firefighterPos.x != firePos.x){
+            if(std::abs(firefighterPos.x - firePos.x) > std::abs(firefighterPos.y - firePos.y)){
                 firefighterPos.x = firefighterPos.x > firePos.x ? firefighterPos.x-1 : firefighterPos.x+1;
             }
             else{

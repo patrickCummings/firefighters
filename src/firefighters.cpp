@@ -8,6 +8,9 @@ const std::string background = "\u{1F3E0}";
 const std::string fire = "\u{1F525}";
 const std::string firefighter = "\u{1F9D1}";
 
+#define MIN_MAP_SIZE 5
+#define MAX_MAP_SIZE 35
+
 // Define a struct to hold row and column indices
 struct Position {
     int x;
@@ -126,10 +129,20 @@ int main() {
     // Get map size
     int mapSize;
     std::string userIn = "";
-    std::cout << "Welcome to FireFighters! Choose your map size (Min 2, Max 30):";
+    std::cout << "Welcome to FireFighters! Choose your map size (" + std::to_string(MIN_MAP_SIZE) + ", " + std::to_string(MAX_MAP_SIZE) + ")";
     std::cin >> mapSize;
-    mapSize = mapSize < 2 ? 2 : mapSize;
-    mapSize = mapSize > 30 ? 30 : mapSize;
+
+    // Rudimentery type check
+    if (std::cin.fail())
+        {
+            std::cout << "Error: Conversion to integer failed!\n";
+            //clear failbit
+            std::cin.clear();
+            return 1;
+        }
+
+    mapSize = mapSize < MIN_MAP_SIZE ? MIN_MAP_SIZE : mapSize;
+    mapSize = mapSize > MAX_MAP_SIZE ? MAX_MAP_SIZE : mapSize;
 
     Map map(mapSize);
 

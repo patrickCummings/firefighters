@@ -3,6 +3,7 @@
 #include <string>
 #include <thread>
 #include <chrono>
+#include <random>
 
 const std::string background = "\u{1F3E0}";
 const std::string fire = "\u{1F525}";
@@ -70,11 +71,17 @@ public:
         std::cout << std::endl << "Fire EXTINGUISHED" << std::endl;
     }
 
-    // Method to start a fire on the map
-    // TODO: Start on a random location, right now it just starts bottom left
+    // Method to start a fire at a random location on the map
+    // TODO: Make sure not to start on a firefighter
     void startFire() {
-        firePos.x = mapSize-1;
-        firePos.y = mapSize-1;
+        std::random_device rd; // obtain a random number from hardware
+        std::mt19937 gen(rd()); // seed the generator
+        std::uniform_int_distribution<> distr(0, mapSize-1); // define the range
+
+        //firePos = randomFire;
+        firePos.y = distr(gen);
+        firePos.x = distr(gen);
+
         set(firePos.y, firePos.x, fire);
     }
 

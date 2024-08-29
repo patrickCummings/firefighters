@@ -3,10 +3,14 @@
 #include <string>
 #include <thread>
 #include <chrono>
+#include <random>
 
 const std::string background = "\u{1F3E0}";
 const std::string fire = "\u{1F525}";
 const std::string firefighter = "\u{1F9D1}";
+
+#define MIN_MAP_SIZE 5
+#define MAX_MAP_SIZE 35
 
 // Define a struct to hold row and column indices
 struct Position {
@@ -48,7 +52,7 @@ public:
         while(firefighterPos.x != firePos.x || firefighterPos.y != firePos.y){
             Position oldPos = firefighterPos;
             // Move Firefighter one position closer, always move X first
-            if(firefighterPos.x != firePos.x){
+            if(std::abs(firefighterPos.x - firePos.x) > std::abs(firefighterPos.y - firePos.y)){
                 firefighterPos.x = firefighterPos.x > firePos.x ? firefighterPos.x-1 : firefighterPos.x+1;
             }
             else{
@@ -67,11 +71,17 @@ public:
         std::cout << std::endl << "Fire EXTINGUISHED" << std::endl;
     }
 
-    // Method to start a fire on the map
-    // TODO: Start on a random location, right now it just starts bottom left
+    // Method to start a fire at a random location on the map
+    // TODO: Make sure not to start on a firefighter
     void startFire() {
-        firePos.x = mapSize-1;
-        firePos.y = mapSize-1;
+        std::random_device rd; // obtain a random number from hardware
+        std::mt19937 gen(rd()); // seed the generator
+        std::uniform_int_distribution<> distr(0, mapSize-1); // define the range
+
+        //firePos = randomFire;
+        firePos.y = distr(gen);
+        firePos.x = distr(gen);
+
         set(firePos.y, firePos.x, fire);
     }
 
@@ -126,10 +136,20 @@ int main() {
     // Get map size
     int mapSize;
     std::string userIn = "";
-    std::cout << "Welcome to FireFighters! Choose your map size (Min 2, Max 30):";
+    std::cout << "Welcome to FireFighters! Choose your map size (" + std::to_string(MIN_MAP_SIZE) + ", " + std::to_string(MAX_MAP_SIZE) + ")";
     std::cin >> mapSize;
-    mapSize = mapSize < 2 ? 2 : mapSize;
-    mapSize = mapSize > 30 ? 30 : mapSize;
+
+    // Rudimentery type check
+    if (std::cin.fail())
+        {
+            std::cout << "Error: Conversion to integer failed!\n";
+            //clear failbit
+            std::cin.clear();
+            return 1;
+        }
+
+    mapSize = mapSize < MIN_MAP_SIZE ? MIN_MAP_SIZE : mapSize;
+    mapSize = mapSize > MAX_MAP_SIZE ? MAX_MAP_SIZE : mapSize;
 
     Map map(mapSize);
 
